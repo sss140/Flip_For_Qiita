@@ -16,10 +16,12 @@ struct Flip1:View{
             //角度90度〜270度（π/2〜3π/2）で色を変更
             .foregroundColor(cos(self.angle)>0 ? Color.red:Color.blue)
             .rotation3DEffect(Angle(radians: self.angle), axis: (x:axis.x,y:axis.y,z:axis.z))
-            .animation(self.animation)
+            //.animation(self.animation)
             .onTapGesture {
                 //タップしたら180度加算
-                self.angle += .pi
+                withAnimation(self.animation){
+                    self.angle += .pi
+                }
         }
     }
 }
@@ -34,15 +36,15 @@ struct Flip2:View{
     @State var flipped:Bool = true
     var body:some View{
         Rectangle()
-            
             .frame(width: 300.0, height: 200.0)
             .cornerRadius(20.0)
-            .modifier(FlipEffect(angle: self.angle, flipped: self.$flipped))
             .foregroundColor(self.flipped ? Color.red:Color.blue)
-            .animation(self.animation)
+            .modifier(FlipEffect(angle: self.angle, flipped: self.$flipped))
             .onTapGesture {
                 //タップしたら180度加算
-                self.angle += .pi
+                withAnimation(self.animation){
+                    self.angle += .pi
+                }
         }
     }
 }
@@ -85,7 +87,13 @@ struct FlipEffect:GeometryEffect{
 
 struct ContentView: View {
     var body: some View {
-        Flip2()
+        VStack{
+            Spacer()
+            Flip1()
+            Spacer()
+            Flip2()
+            Spacer()
+        }
     }
 }
 
